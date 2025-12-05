@@ -1,0 +1,24 @@
+h1{
+    color: blue;
+    font-size: 40px;
+}
+div{
+    width: 200px;
+    height: 200px;
+    background :aqua;
+    margin-bottom: 20px;
+}
+div p{
+    color: black;
+}
+.text-bk {
+    color: red;
+    text-align: center;
+}
+.first-div {
+    background: blue;
+    
+}
+.first-div p{
+    color: white;
+}   
