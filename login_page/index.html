@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Welcome Back</h1>
+                <p>Login to your account</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+
+                <div class="options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn" id="loginBtn">
+                    <span id="btnText">Login</span>
+                    <span id="btnSpinner" class="spinner hidden"></span>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <div class="social-btn google">
+                    <i class="fab fa-google"></i>
+                </div>
+                <div class="social-btn facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="social-btn twitter">
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+
+            <div class="signup-link">
+                Don't have an account? <a href="#">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Login successful!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const rememberCheckbox = document.getElementById('remember');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+
+            // Check if user is already logged in
+            checkLoginStatus();
+
+            // Handle form submission
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Show loading state
+                setLoadingState(true);
+
+                // Get form values
+                const email = emailInput.value;
+                const password = passwordInput.value;
+                const remember = rememberCheckbox.checked;
+
+                // Simulate API call
+                setTimeout(() => {
+                    // For demo purposes, accept any email/password combination
+                    // In a real app, you would validate against a backend
+                    if (email && password) {
+                        // Store login state
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+
+                        if (remember) {
+                            // Set expiration to 30 days if "remember me" is checked
+                            const expiration = new Date();
+                            expiration.setDate(expiration.getDate() + 30);
+                            localStorage.setItem('loginExpiration', expiration.toISOString());
+                        }
+
+                        // Show success notification
+                        showNotification('Login successful!', 'success');
+
+                        // Redirect to dashboard or home page after a delay
+                        setTimeout(() => {
+                            // In a real app, you would redirect to the dashboard
+                            // window.location.href = '/dashboard';
+                            alert('Redirecting to dashboard...');
+                        }, 1500);
+                    } else {
+                        // Show error notification
+                        showNotification('Invalid email or password', 'error');
+                    }
+
+                    // Reset loading state
+                    setLoadingState(false);
+                }, 1500);
+            });
+
+            // Handle social login buttons
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const platform = this.classList[1];
+                    showNotification(`Redirecting to ${platform} login...`, 'success');
+
+                    // In a real app, you would redirect to the OAuth provider
+                    setTimeout(() => {
+                        alert(`This would redirect to ${platform} OAuth login`);
+                    }, 1500);
+                });
+            });
+
+            // Handle forgot password link
+            document.querySelector('.forgot-password').addEventListener('click', function (e) {
+                e.preventDefault();
+                showNotification('Password reset link sent to your email', 'success');
+            });
+
+            // Handle signup link
+            document.querySelector('.signup-link a').addEventListener('click', function (e) {
+                e.preventDefault();
+                showNotification('Redirecting to signup page...', 'success');
+
+                // In a real app, you would redirect to the signup page
+                setTimeout(() => {
+                    alert('This would redirect to the signup page');
+                }, 1500);
+            });
+
+            function setLoadingState(isLoading) {
+                if (isLoading) {
+                    btnText.textContent = 'Logging in...';
+                    btnSpinner.classList.remove('hidden');
+                    loginBtn.disabled = true;
+                } else {
+                    btnText.textContent = 'Login';
+                    btnSpinner.classList.add('hidden');
+                    loginBtn.disabled = false;
+                }
+            }
+
+            function showNotification(message, type) {
+                notificationText.textContent = message;
+                notification.className = 'notification ' + type;
+
+                // Update icon based on type
+                const icon = notification.querySelector('i');
+                if (type === 'success') {
+                    icon.className = 'fas fa-check-circle';
+                } else if (type === 'error') {
+                    icon.className = 'fas fa-exclamation-circle';
+                }
+
+                // Show notification
+                notification.classList.add('show');
+
+                // Hide notification after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const loginExpiration = localStorage.getItem('loginExpiration');
+
+                if (isLoggedIn) {
+                    // Check if login has expired
+                    if (loginExpiration) {
+                        const expirationDate = new Date(loginExpiration);
+                        if (new Date() > expirationDate) {
+                            // Login expired, clear storage
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('userEmail');
+                            localStorage.removeItem('loginExpiration');
+                            return;
+                        }
+                    }
+
+                    // User is logged in, redirect to dashboard
+                    // In a real app, you would redirect to the dashboard
+                    // window.location.href = '/dashboard';
+                    const userEmail = localStorage.getItem('userEmail');
+                    showNotification(`Welcome back, ${userEmail}!`, 'success');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
