@@ -1,5 +1,24 @@
 body{
-    background:url(pexels-danieljschwarz-34702423.jpg);
-    background-size: cover;
+    background:url(eee.jpg);
+    background-size: cover; 
+     background-attachment: fixed;
+     /* background-attachment: scroll; */
+
+}
+div{
+     /* background-color:rgba(8, 62, 80, 0.36) ;
+     background-image: url(eee.jpg);
+     background-size: 150px 150px;
+     /* background-repeat: repeat-y;
+     background-repeat: repeat-x; */
+     background-repeat: no-repeat;
+     /* background-position: center; */
+        /* background-position: right top; */
+        /* background-position: left bottom; */
+        /* background-position: 100px 50px; */
+   /* background-position: top left; */
+     /* background-position: left top; */ 
+     background: red url(eee.jpg) no-repeat center;
+     
 
 }
